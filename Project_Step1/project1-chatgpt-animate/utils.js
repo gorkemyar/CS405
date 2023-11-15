@@ -145,9 +145,12 @@ void main() {
 
 function getChatGPTModelViewMatrix() {
     const transformationMatrix = new Float32Array([
-        // you should paste the response of the chatGPT here:
+    0.35355, -0.61237, 0.70711, 0.24495,
+    0.61237, 0.35355, 0.70711, -0.20495,
+    -0.70711, 0.70711, 0, 0,
+    0, 0, 0, 1
+]);
 
-    ]);
     return getTransposeMatrix(transformationMatrix);
 }
 
@@ -161,6 +164,20 @@ function getChatGPTModelViewMatrix() {
 function getModelViewMatrix() {
     // calculate the model view matrix by using the transformation
     // methods and return the modelView matrix in this method
+    var translation_matrix = createTranslationMatrix(0.3, -0.25, 0);
+    var scaling_matrix = createScaleMatrix(0.5, 0.5, 1);
+    var rotation_matrix_x = createRotationMatrix_X(Math.PI / 6);
+    var rotation_matrix_y = createRotationMatrix_Y(Math.PI / 4);
+    var rotation_matrix_z = createRotationMatrix_Z(Math.PI / 3);
+
+    var transformation_matrix = multiplyMatrices(scaling_matrix, translation_matrix);
+    transformation_matrix = multiplyMatrices(rotation_matrix_x, transformation_matrix);
+    transformation_matrix = multiplyMatrices(rotation_matrix_y, transformation_matrix);
+    transformation_matrix = multiplyMatrices(rotation_matrix_z, transformation_matrix);
+
+    console.log(transformation_matrix);
+    return transformation_matrix
+
 }
 
 /**
@@ -172,9 +189,45 @@ function getModelViewMatrix() {
  * The next 5 seconds, the cube should return to its initial position.
  */
 function getPeriodicMovement(startTime) {
-    // this metdo should return the model view matrix at the given time
-    // to get a smooth animation
+  // Total duration of each cycle of the animation (in milliseconds)
+  const cycleDuration = 10000; // 10 seconds
+
+  // Time elapsed since the animation started
+  const elapsedTime = (Date.now() - startTime) % cycleDuration;
+
+  // Calculate the progress in the current cycle (between 0 and 1)
+  const progressInCycle = elapsedTime / cycleDuration;
+
+  // Define your initial and final transformation matrices for the object
+  const initialTransform = createIdentityMatrix();
+  const finalTransform = getModelViewMatrix();
+
+  let interpolatedTransform;
+
+  // Check if we are in the first 5 seconds (forward transformation)
+  if (progressInCycle < 0.5) {
+    // Interpolate forward from initial to final transformation
+    interpolatedTransform = interpolateTransforms(initialTransform, finalTransform, progressInCycle * 2);
+  } else {
+    // Interpolate backward from final to initial transformation for the next 5 seconds
+    const progressInBackwardCycle = (progressInCycle - 0.5) * 2;
+    interpolatedTransform = interpolateTransforms(finalTransform, initialTransform, progressInBackwardCycle);
+  }
+
+  return interpolatedTransform;
 }
 
+// Example transformation matrix interpolation function
+function interpolateTransforms(startTransform, endTransform, progress) {
+  // You need to implement your own interpolation logic here
+  // This can involve interpolating translation, rotation, and scale components
+  // For a simple linear interpolation, you can do something like:
+  const resultTransform = [];
+  for (let i = 0; i < startTransform.length; i++) {
+    const interpolatedValue = startTransform[i] + (endTransform[i] - startTransform[i]) * progress;
+    resultTransform.push(interpolatedValue);
+  }
+  return resultTransform;
+}
 
 
