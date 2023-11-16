@@ -170,10 +170,10 @@ function getModelViewMatrix() {
     var rotation_matrix_y = createRotationMatrix_Y(Math.PI / 4);
     var rotation_matrix_z = createRotationMatrix_Z(Math.PI / 3);
 
-    var transformation_matrix = multiplyMatrices(scaling_matrix, translation_matrix);
-    transformation_matrix = multiplyMatrices(rotation_matrix_x, transformation_matrix);
-    transformation_matrix = multiplyMatrices(rotation_matrix_y, transformation_matrix);
+    var transformation_matrix = multiplyMatrices(rotation_matrix_y, rotation_matrix_x);
     transformation_matrix = multiplyMatrices(rotation_matrix_z, transformation_matrix);
+    transformation_matrix = multiplyMatrices(scaling_matrix, transformation_matrix);
+    transformation_matrix = multiplyMatrices(translation_matrix, transformation_matrix);
 
     console.log(transformation_matrix);
     return transformation_matrix
