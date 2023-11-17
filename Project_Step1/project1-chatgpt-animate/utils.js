@@ -175,7 +175,6 @@ function getModelViewMatrix() {
     transformation_matrix = multiplyMatrices(scaling_matrix, transformation_matrix);
     transformation_matrix = multiplyMatrices(translation_matrix, transformation_matrix);
 
-    console.log(transformation_matrix);
     return transformation_matrix
 
 }
