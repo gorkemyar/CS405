@@ -129,10 +129,12 @@ class MeshDrawer {
 		if (isPowerOf2(img.width) && isPowerOf2(img.height)) {
 			gl.generateMipmap(gl.TEXTURE_2D);
 		} else {
+			gl.generateMipmap(gl.TEXTURE_2D);
 			console.error("Task 1: Non power of 2, you should implement this part to accept non power of 2 sized textures");
 			/**
 			 * @Task1 : You should implement this part to accept non power of 2 sized textures
 			 */
+			
 		}
 
 		gl.useProgram(this.prog);
