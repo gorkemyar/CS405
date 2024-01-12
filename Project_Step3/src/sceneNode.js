@@ -32,10 +32,20 @@ class SceneNode {
         var transformedModelView = modelView;
         var transformedNormals = normalMatrix;
         var transformedModel = modelMatrix;
+        
+        // Apply the transformation of the current node
+        transformedMvp = MatrixMult(transformedMvp, this.trs.getTransformationMatrix());
+        transformedModelView = MatrixMult(transformedModelView, this.trs.getTransformationMatrix());
+        transformedNormals = MatrixMult(transformedNormals, this.trs.getTransformationMatrix());
+        transformedModel = MatrixMult(transformedModel, this.trs.getTransformationMatrix());
+        
 
         // Draw the MeshDrawer
         if (this.meshDrawer) {
             this.meshDrawer.draw(transformedMvp, transformedModelView, transformedNormals, transformedModel);
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].draw(transformedMvp, transformedModelView, transformedNormals, transformedModel);
+            }
         }
     }
 
